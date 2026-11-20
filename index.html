@@ -43,9 +43,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .carousel{position:relative;container-type:inline-size;overflow:hidden;border-radius:14px}
 .track{display:flex;gap:1.6cqw;height:29cqw;transition:transform .7s cubic-bezier(.65,0,.25,1);will-change:transform}
 .work{flex:none;position:relative;height:100%;margin:0;border-radius:12px;overflow:hidden;background:var(--card);cursor:zoom-in;user-select:none}
-.work[data-yt]{cursor:default}
+.work[data-video]{cursor:default}
 .work>img{display:block;height:100%}
 .work>img.th{width:100%;object-fit:cover}
+.work>img.crop{width:100%;object-fit:cover;object-position:top}
 .work>svg{display:block;width:100%;height:100%}
 .work>iframe{display:block;width:100%;height:100%;border:0}
 .play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1;width:clamp(36px,6cqw,64px);height:clamp(36px,6cqw,64px);padding-left:.15em;border:0;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;font-size:clamp(14px,2.4cqw,24px);cursor:pointer;transition:.2s}
@@ -76,6 +77,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .lb-stage>*{flex:none;margin:auto}
 .lb-stage img{width:auto;height:auto;max-width:100%;max-height:calc(100dvh - 170px);cursor:zoom-in}
 .lb-stage svg{width:800px;height:auto;max-width:100%;cursor:zoom-in}
+.lb-stage.tall img{max-height:none}
 .lb-stage.full img,.lb-stage.full svg{max-width:none;max-height:none;cursor:zoom-out}
 .lb-cap{padding:10px 20px calc(16px + env(safe-area-inset-bottom,0px));text-align:center}
 .lb-cap h3{margin:0 0 4px;font-size:18px}
@@ -95,13 +97,14 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 <!-- ================= 頂部導覽列 ================= -->
 <nav class="topbar">
-  <button type="button" data-target="brand">品牌識別</button>
-  <button type="button" data-target="poster">海報設計</button>
-  <button type="button" data-target="editorial">書籍編排</button>
-  <button type="button" data-target="package">包裝設計</button>
-  <button type="button" data-target="type">字體設計</button>
+  <button type="button" data-target="illustration">插畫作品</button>
+  <button type="button" data-target="flatillustration">扁平風格插畫</button>
+  <button type="button" data-target="kvbanner">主視覺 / 橫幅</button>
+  <button type="button" data-target="social">社群圖</button>
+  <button type="button" data-target="motion">動態製作</button>
+  <button type="button" data-target="landingpage">活動單頁</button>
   <!-- Instagram：把 href 換成你的帳號網址；不需要可整段刪除 -->
-  <a class="ig" href="https://www.instagram.com/your_account/" target="_blank" rel="noopener" aria-label="Instagram">
+  <a class="ig" href="https://www.instagram.com/bonaiarts/" target="_blank" rel="noopener" aria-label="Instagram">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
     Instagram
   </a>
@@ -109,8 +112,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 <!-- ================= 頁首 ================= -->
 <header class="hero">
-  <h1>平面設計<br>作品集</h1>
-  <p>品牌、海報、編輯、包裝與字體。滑過圖片可暫停並查看說明，點擊圖片可檢視原始大小。</p>
+  <h1>插畫、設計<br>作品集</h1>
+  <p>💚 bonaiarts@gmail.com</p>
 </header>
 
 <!-- ================= 作品區 =================
@@ -118,481 +121,663 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
    1) 放圖片：把 <img src=""> 的 src 改成 .jpg 路徑，例如 src="images/brand-1.jpg"
       圖片保持原比例、統一高度；src 留空則顯示範例圖形（data-hue 改色相 0–360、data-ratio 改寬高比）
    2) 放 YouTube 影片：刪掉 <img>，並在 <figure> 加上 data-yt="影片ID"（或貼完整網址）
-        <figure class="work" data-yt="dQw4w9WgXcQ"> <figcaption>…</figcaption> </figure>
+        <figure class="work" data-yt="dQw4w9WgXcQ" data-ratio="1.78"> <figcaption>…</figcaption> </figure>
+        影片不是 16:9 時請設定 data-ratio（寬÷高）：正方形 1、直式 Shorts 約 0.5625；有放 <img src="封面.jpg"> 則自動採用封面比例
+   2b) 放 Instagram 影片 / Reels：在 <figure> 加上 data-ig="貼文網址"（貼文需為公開）
+        <figure class="work" data-ig="https://www.instagram.com/reel/XXXXXXXXXXX/" data-ratio="0.62">
+        可保留 <img src="封面.jpg"> 當封面；不放則顯示範例圖形。data-ratio 是寬高比（直式影片約 0.6）
+   2c) 預覽圖 → 點開看完整圖檔：<img src> 放縮圖，在 <figure> 加 data-full="完整圖檔路徑"
+        <figure class="work" data-full="images/D/001-full.jpg" data-ratio="1">
+          <img src="images/D/001-thumb.jpg" alt="…">
+        預覽以 data-ratio 的外框顯示（長圖顯示頂部），點擊後燈箱載入完整圖檔，長圖可上下捲動
    3) 文字：直接改 <figcaption> 裡的標題 <h3>、說明 <p>、標籤 <li>
    4) 增減作品：複製或刪除整個 <figure>…</figure>
 -->
+
+
+
 <main>
   <!-- ============ 區塊 01：插畫作品 ============ -->
-  <section class="block" id="brand">
+  <section class="block" id="illustration">
     <header class="block-head"><b>01</b><h2>插畫作品</h2><span>Illustration</span></header>
-    <p class="block-desc">從標誌到完整視覺系統，替品牌建立一致且好記的樣貌。</p>
+    <p class="block-desc">一些來自生活的感想，一些蹦出來的碎片，一些被達成的需求。</p>
     <div class="carousel">
       <button class="arr prev" type="button" aria-label="上一張">‹</button>
       <button class="arr next" type="button" aria-label="下一張">›</button>
       <div class="track">
         <!-- 作品 1 -->
         <figure class="work" data-hue="18" data-ratio="1.3">
-          <img src="images/A/001.jpg" alt="山嵐咖啡 品牌形象">
+          <img src="images/A/001.jpg" alt="捕食">
           <figcaption>
-            <h3>山嵐咖啡 品牌形象</h3>
-            <p>以山稜線為意象的圖形標誌，延伸至杯套、菜單與招牌。</p>
-            <ul class="tags"><li>Logo</li><li>VI</li><li>2025</li></ul>
+            <h3>捕食</h3>
+            <p>吸血鬼、女巫和獵物為主題的萬聖節插畫。</p>
+            <ul class="tags"><li>Procreate</li><li>2026</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 2 -->
         <figure class="work" data-hue="200" data-ratio="0.85">
-          <img src="images/A/002.jpg" alt="潮間帶 書店識別">
+          <img src="images/A/002.jpg" alt="縱身">
           <figcaption>
-            <h3>潮間帶 書店識別</h3>
-            <p>波浪與書頁堆疊的雙關標誌，配色取自海岸黃昏。</p>
-            <ul class="tags"><li>Logo</li><li>導視</li><li>2025</li></ul>
+            <h3>縱身</h3>
+            <p>如果只能順著時間一直墜落，希望至少是自在的。</p>
+            <ul class="tags"><li>Procreate</li><li>Blender</li><li>2026</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 3 -->
         <figure class="work" data-hue="150" data-ratio="1.6">
-          <img src="images/A/003.jpg" alt="微光 診所 CI">
+          <img src="images/A/003.jpg" alt="指引">
           <figcaption>
-            <h3>微光 診所 CI</h3>
-            <p>柔和的圓形系統傳達安心感，字體選用圓體無襯線。</p>
-            <ul class="tags"><li>CI</li><li>文具</li><li>2024</li></ul>
+            <h3>指引</h3>
+            <p></p>
+            <ul class="tags"><li>Photoshop</li><li>2022</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 4 -->
         <figure class="work" data-hue="330" data-ratio="1.05">
-          <img src="images/A/004.jpg" alt="拾光 手作市集">
+          <img src="images/A/004.jpg" alt="日式商店街">
           <figcaption>
-            <h3>拾光 手作市集</h3>
-            <p>可自由組合的圖形模組，每季更換主色。</p>
-            <ul class="tags"><li>動態識別</li><li>2024</li></ul>
+            <h3>日式商店街</h3>
+            <p>配合東京奧運相關主題繪製的場景。</p>
+            <ul class="tags"><li>Photoshop</li><li>2020</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 5 -->
         <figure class="work" data-hue="230" data-ratio="0.75">
-          <img src="images/A/005.jpg" alt="雲端 共享工作室">
+          <img src="images/A/005.jpg" alt="時運">
           <figcaption>
-            <h3>雲端 共享工作室</h3>
-            <p>以疊加的方塊象徵共享空間，單色即可辨識。</p>
-            <ul class="tags"><li>Logo</li><li>網站</li><li>2024</li></ul>
+            <h3>時運</h3>
+            <p>以血淚交換，被命運決定。</p>
+            <ul class="tags"><li>Procreate</li><li>Illustrator</li><li>2023</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 6 -->
         <figure class="work" data-hue="35" data-ratio="1.45">
-          <img src="images/A/006.jpg" alt="暖爐 麵包坊">
+          <img src="images/A/006.jpg" alt="夏日">
           <figcaption>
-            <h3>暖爐 麵包坊</h3>
-            <p>手繪火光與麥穗結合，包材延伸統一語彙。</p>
-            <ul class="tags"><li>Logo</li><li>包材</li><li>2023</li></ul>
+            <h3>夏日</h3>
+            <p></p>
+            <ul class="tags"><li>Procreate</li><li>2025</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 7 -->
         <figure class="work" data-hue="35" data-ratio="1.45">
-          <img src="" alt="暖爐 麵包坊">
+          <img src="images/A/007.jpg" alt="咖啡因">
           <figcaption>
-            <h3>暖爐 麵包坊</h3>
-            <p>手繪火光與麥穗結合，包材延伸統一語彙。</p>
-            <ul class="tags"><li>Logo</li><li>包材</li><li>2023</li></ul>
+            <h3>咖啡因</h3>
+            <p>注意力被稀釋直到不再能駐足。</p>
+            <ul class="tags"><li>Procreate</li><li>2026</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 8 -->
+        <figure class="work" data-hue="35" data-ratio="1.45">
+          <img src="images/A/008.jpg" alt="魔女">
+          <figcaption>
+            <h3>魔女</h3>
+            <p></p>
+            <ul class="tags"><li>Photoshop</li><li>2022</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 9 -->
+        <figure class="work" data-hue="35" data-ratio="1.45">
+          <img src="images/A/009.jpg" alt="電影-怪物">
+          <figcaption>
+            <h3>電影-怪物</h3>
+            <p>據說白屈菜的花語是回憶、找到我、凋零的希望。</p>
+            <ul class="tags"><li>Procreate</li><li>2023</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 10 -->
+        <figure class="work" data-hue="35" data-ratio="1.45">
+          <img src="images/A/010.jpg" alt="賽博龐克風格場景">
+          <figcaption>
+            <h3>賽博龐克風格場景</h3>
+            <p></p>
+            <ul class="tags"><li>Photoshop</li><li>2020</li></ul>
           </figcaption>
         </figure>
       </div>
     </div>
     <div class="dots"></div>
-    <p class="hint">點擊看說明</p>
+    <p class="hint">點擊展開</p>
   </section>
 
-  <!-- ============ 區塊 02：扁平插畫 ============ -->
-  <section class="block" id="poster">
-    <header class="block-head"><b>02</b><h2>扁平插畫</h2><span>Flat Illustration</span></header>
-    <p class="block-desc">用色彩、構圖與字體，讓活動與展覽在一眼之間被記住。</p>
+
+
+  <!-- ============ 區塊 02：扁平風格插畫 ============ -->
+  <section class="block" id="flatillustration">
+    <header class="block-head"><b>02</b><h2>扁平風格插畫</h2><span>Flat Illustration</span></header>
+    <p class="block-desc">用最簡單的線條、平塗色彩來呈現角色與場景；以穩定但不完全平順的筆觸保留溫度與質感。</p>
     <div class="carousel">
       <button class="arr prev" type="button" aria-label="上一張">‹</button>
       <button class="arr next" type="button" aria-label="下一張">›</button>
       <div class="track">
         <!-- 作品 1 -->
         <figure class="work" data-hue="350" data-ratio="0.85">
-          <img src="images/B/001.jpg" alt="城市呼吸 展覽海報">
+          <img src="images/B/001.jpg" alt="電影-Lamb">
           <figcaption>
-            <h3>城市呼吸 展覽海報</h3>
-            <p>大面積色塊與疊印效果，呈現都市節奏。</p>
-            <ul class="tags"><li>B1</li><li>絲網印刷</li></ul>
+            <h3>電影-Lamb</h3>
+            <p></p>
+            <ul class="tags"><li>Procreate</li><li>2026</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 2 -->
         <figure class="work" data-hue="265" data-ratio="1.6">
-          <img src="images/B/002.jpg" alt="夏夜爵士 音樂節">
+          <img src="images/B/002.jpg" alt="Pocky Day">
           <figcaption>
-            <h3>夏夜爵士 音樂節</h3>
-            <p>放射狀線條與手寫字，營造即興律動。</p>
-            <ul class="tags"><li>A2</li><li>數位印刷</li></ul>
+            <h3>Pocky Day</h3>
+            <p></p>
+            <ul class="tags"><li>Procreate</li><li>2026</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 3 -->
         <figure class="work" data-hue="215" data-ratio="1.05">
-          <img src="images/B/003.jpg" alt="無聲 影展主視覺">
+          <img src="images/B/003.jpg" alt="影集-Euphoria">
           <figcaption>
-            <h3>無聲 影展主視覺</h3>
-            <p>大量留白搭配單一焦點，強調靜默張力。</p>
-            <ul class="tags"><li>主視覺</li><li>2025</li></ul>
+            <h3>影集-Euphoria</h3>
+            <p></p>
+            <ul class="tags"><li>Procreate</li><li>2026</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 4 -->
         <figure class="work" data-hue="40" data-ratio="0.75">
-          <img src="images/B/004.jpg" alt="Typo Night 講座">
+          <img src="images/B/004.jpg" alt="夢境">
           <figcaption>
-            <h3>Typo Night 講座</h3>
-            <p>以巨大字母作為視覺主體，疊加半透明圖層。</p>
-            <ul class="tags"><li>A3</li><li>雙色印刷</li></ul>
+            <h3>夢境</h3>
+            <p>山林中收集眼睛的師父。</p>
+            <ul class="tags"><li>Procreate</li><li>2026</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 5 -->
         <figure class="work" data-hue="130" data-ratio="1.45">
-          <img src="images/B/005.jpg" alt="綠島 環保行動">
+          <img src="images/B/005.jpg" alt="電影-Downton Abbey">
           <figcaption>
-            <h3>綠島 環保行動</h3>
-            <p>螢光綠與黑的強對比，訴求直接有力。</p>
-            <ul class="tags"><li>公益</li><li>2024</li></ul>
+            <h3>電影-Downton Abbey</h3>
+            <p></p>
+            <ul class="tags"><li>Procreate</li><li>2026</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 6 -->
         <figure class="work" data-hue="300" data-ratio="1.3">
-          <img src="images/B/006.jpg" alt="午後 劇場">
+          <img src="images/B/006.jpg" alt="電影-ベイビーわるきゅーれ">
           <figcaption>
-            <h3>午後 劇場</h3>
-            <p>柔焦漸層搭配細字，呈現戲劇前的靜謐。</p>
-            <ul class="tags"><li>B2</li><li>2023</li></ul>
+            <h3>電影-ベイビーわるきゅーれ</h3>
+            <p></p>
+            <ul class="tags"><li>Procreate</li><li>2026</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 7 -->
+        <figure class="work" data-hue="300" data-ratio="1.3">
+          <img src="images/B/007.jpg" alt="影集-Task">
+          <figcaption>
+            <h3>影集-Task</h3>
+            <p></p>
+            <ul class="tags"><li>Procreate</li><li>2026</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 8 -->
+        <figure class="work" data-hue="300" data-ratio="1.3">
+          <img src="images/B/008.jpg" alt="影集-The Vampire Lestat">
+          <figcaption>
+            <h3>影集-The Vampire Lestat</h3>
+            <p></p>
+            <ul class="tags"><li>Procreate</li><li>2026</li></ul>
           </figcaption>
         </figure>
       </div>
     </div>
     <div class="dots"></div>
-    <p class="hint">點擊看說明</p>
+    <p class="hint">點擊展開</p>
   </section>
 
-  <!-- ============ 區塊 03：書籍編排 ============ -->
-  <section class="block" id="editorial">
-    <header class="block-head"><b>03</b><h2>書籍編排</h2><span>Editorial</span></header>
-    <p class="block-desc">書籍與刊物的版面設計，讓閱讀節奏流暢而有層次。</p>
+
+
+  <!-- ============ 區塊 03：主視覺/橫幅 ============ -->
+  <section class="block" id="kvbanner">
+    <header class="block-head"><b>03</b><h2>主視覺 / 橫幅</h2><span>KV / Banner</span></header>
+    <p class="block-desc">電信品牌的活動視覺，包括插圖繪製，資訊排版，動圖設計。</p>
     <div class="carousel">
       <button class="arr prev" type="button" aria-label="上一張">‹</button>
       <button class="arr next" type="button" aria-label="下一張">›</button>
       <div class="track">
         <!-- 作品 1 -->
         <figure class="work" data-hue="170" data-ratio="1.6">
-          <img src="images/C/001.gif" alt="《島嶼筆記》攝影集">
+          <img src="images/C/001.gif" alt="行動支付活動">
           <figcaption>
-            <h3>《島嶼筆記》攝影集</h3>
-            <p>九宮格版面搭配細線註解，節奏如旅行日誌。</p>
-            <ul class="tags"><li>書籍設計</li><li>200頁</li></ul>
+            <h3>行動支付點數回饋活動</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>KV</li><li>2023</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 2 -->
         <figure class="work" data-hue="25" data-ratio="1.05">
-          <img src="images/C/002.jpg" alt="《食物的地圖》雜誌">
+          <img src="images/C/002.jpg" alt="新春抽獎活動">
           <figcaption>
-            <h3>《食物的地圖》雜誌</h3>
-            <p>欄位彈性切換，圖文穿插形成閱讀節奏。</p>
-            <ul class="tags"><li>雜誌</li><li>版面</li></ul>
+            <h3>新春抽獎活動</h3>
+            <p></p>
+            <ul class="tags"><li>Concept & Production</li><li>KV</li><li>2023</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 3 -->
         <figure class="work" data-hue="285" data-ratio="0.75">
-          <img src="images/C/003.jpg" alt="《寂靜之聲》詩集">
+          <img src="images/C/003.jpg" alt="行動支付活動">
           <figcaption>
-            <h3>《寂靜之聲》詩集</h3>
-            <p>極簡版面，字距與行距呈現詩的呼吸。</p>
-            <ul class="tags"><li>詩集</li><li>裝幀</li></ul>
+            <h3>行動支付點數回饋活動</h3>
+            <p></p>
+            <ul class="tags"><li>Concept & Production</li><li>KV</li><li>2023</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 4 -->
         <figure class="work" data-hue="190" data-ratio="1.45">
-          <img src="images/C/004.gif" alt="年度報告 2025">
+          <img src="images/C/004.gif" alt="行動支付活動">
           <figcaption>
-            <h3>年度報告 2025</h3>
-            <p>資料視覺化結合插圖，讓數字更易讀。</p>
-            <ul class="tags"><li>年報</li><li>資訊設計</li></ul>
+            <h3>行動支付點數回饋活動</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>KV</li><li>2023</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 5 -->
         <figure class="work" data-hue="55" data-ratio="1.3">
-          <img src="images/C/005.gif" alt="《老街》口述歷史">
+          <img src="images/C/005.gif" alt="推廣電子帳單抽獎活動">
           <figcaption>
-            <h3>《老街》口述歷史</h3>
-            <p>老照片與訪談並置，紙張選用微黃道林。</p>
-            <ul class="tags"><li>書籍</li><li>2024</li></ul>
+            <h3>推廣電子帳單抽獎活動</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>KV</li><li>2022</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 6 -->
         <figure class="work" data-hue="245" data-ratio="0.85">
-          <img src="images/C/006.jpg" alt="獨立刊物《隙》">
+          <img src="images/C/006.jpg" alt="電信5G方案升級活動">
           <figcaption>
-            <h3>獨立刊物《隙》</h3>
-            <p>跨頁大圖與小字註腳，刻意留下不對稱。</p>
-            <ul class="tags"><li>刊物</li><li>2023</li></ul>
+            <h3>電信5G方案升級活動</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>KV</li><li>2023</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 7 -->
         <figure class="work" data-hue="245" data-ratio="0.85">
-          <img src="images/C/007.jpg" alt="獨立刊物《隙》">
+          <img src="images/C/007.jpg" alt="電信5G方案升級活動">
           <figcaption>
-            <h3>獨立刊物《隙》</h3>
-            <p>跨頁大圖與小字註腳，刻意留下不對稱。</p>
-            <ul class="tags"><li>刊物</li><li>2023</li></ul>
+            <h3>電信5G方案升級活動</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>KV</li><li>2023</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 8 -->
         <figure class="work" data-hue="245" data-ratio="0.85">
-          <img src="images/C/008.jpg" alt="獨立刊物《隙》">
+          <img src="images/C/008.jpg" alt="電信5G方案優惠活動">
           <figcaption>
-            <h3>獨立刊物《隙》</h3>
-            <p>跨頁大圖與小字註腳，刻意留下不對稱。</p>
-            <ul class="tags"><li>刊物</li><li>2023</li></ul>
+            <h3>電信5G方案優惠活動</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>KV</li><li>2023</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 9 -->
+        <figure class="work" data-hue="245" data-ratio="0.85">
+          <img src="images/C/009.jpg" alt="電信專屬會員好禮">
+          <figcaption>
+            <h3>電信專屬會員好禮</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>Banner</li><li>2023</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 10 -->
+        <figure class="work" data-hue="245" data-ratio="0.85">
+          <img src="images/C/010.jpg" alt="電信預付卡方案">
+          <figcaption>
+            <h3>電信預付卡方案</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>Banner</li><li>2023</li></ul>
           </figcaption>
         </figure>
       </div>
     </div>
     <div class="dots"></div>
-    <p class="hint">點擊看說明</p>
+    <p class="hint">點擊展開</p>
   </section>
 
-  <!-- ============ 區塊 04：包裝設計 ============ -->
-  <section class="block" id="package">
-    <header class="block-head"><b>04</b><h2>包裝設計</h2><span>Packaging</span></header>
-    <p class="block-desc">結構、材質與圖形並重，讓產品在架上自己說話。</p>
+
+
+  <!-- ============ 區塊 04：社群圖 ============ -->
+  <section class="block" id="social">
+    <header class="block-head"><b>04</b><h2>社群圖</h2><span>Social Media Graphics</span></header>
+    <p class="block-desc">鍋物與家電品牌的社群圖，配合臉書版面設計編排圖文。</p>
     <div class="carousel">
       <button class="arr prev" type="button" aria-label="上一張">‹</button>
       <button class="arr next" type="button" aria-label="下一張">›</button>
       <div class="track">
         <!-- 作品 1 -->
-        <figure class="work" data-hue="120" data-ratio="1.05">
-          <img src="" alt="晨露 茶葉禮盒">
+        <figure class="work" data-full="images/D/001.png" data-ratio="1.2">
+          <img src="images/D/001_.jpg" alt="鍋物消費活動">
           <figcaption>
-            <h3>晨露 茶葉禮盒</h3>
-            <p>三款茶種以三色區分，內襯採用壓紋紙。</p>
-            <ul class="tags"><li>盒型</li><li>燙金</li></ul>
+            <h3>鍋物消費活動</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>2024</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 2 -->
-        <figure class="work" data-hue="8" data-ratio="0.75">
-          <img src="" alt="野火 辣椒醬">
+        <figure class="work" data-full="images/D/002.png" data-ratio="1.2">
+          <img src="images/D/002_.jpg" alt="鍋物配料新品項">
           <figcaption>
-            <h3>野火 辣椒醬</h3>
-            <p>火焰剪影圖形與強烈對比色，吸睛上架。</p>
-            <ul class="tags"><li>標籤</li><li>玻璃瓶</li></ul>
+            <h3>鍋物配料新品項</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>2024</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 3 -->
-        <figure class="work" data-hue="195" data-ratio="1.45">
-          <img src="" alt="海鹽 手工皂">
+        <figure class="work" data-full="images/D/003.png" data-ratio="1">
+          <img src="images/D/003_.jpg" alt="鍋物方案介紹">
           <figcaption>
-            <h3>海鹽 手工皂</h3>
-            <p>天然牛皮紙搭配單色印刷，環保又質樸。</p>
-            <ul class="tags"><li>紙盒</li><li>單色印刷</li></ul>
+            <h3>鍋物方案介紹</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>2024</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 4 -->
-        <figure class="work" data-hue="95" data-ratio="1.3">
-          <img src="" alt="小森 兒童餅乾">
+        <figure class="work" data-full="images/D/004.png" data-ratio="1">
+          <img src="images/D/004_.jpg" alt="家電社群互動-焦慮測驗">
           <figcaption>
-            <h3>小森 兒童餅乾</h3>
-            <p>可拆解的動物盒型，吃完還能玩。</p>
-            <ul class="tags"><li>結構設計</li><li>2024</li></ul>
+            <h3>家電社群互動-焦慮測驗</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>2024</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 5 -->
-        <figure class="work" data-hue="250" data-ratio="0.85">
-          <img src="" alt="夜航 精釀啤酒">
+        <figure class="work" data-full="images/D/005.png" data-ratio="1.2">
+          <img src="images/D/005_.jpg" alt="家電除濕情境-寵物">
           <figcaption>
-            <h3>夜航 精釀啤酒</h3>
-            <p>深色瓶身搭配星圖，每款一個星座。</p>
-            <ul class="tags"><li>酒標</li><li>2025</li></ul>
+            <h3>家電除濕情境-寵物</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>2025</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 6 -->
-        <figure class="work" data-hue="48" data-ratio="1.6">
-          <img src="" alt="蜜時 蜂蜜禮組">
+        <figure class="work" data-full="images/D/006.png" data-ratio="1">
+          <img src="images/D/006_.jpg" alt="家電除濕情境-恐怖片">
           <figcaption>
-            <h3>蜜時 蜂蜜禮組</h3>
-            <p>六角形結構盒，開啟後如蜂巢展開。</p>
-            <ul class="tags"><li>禮盒</li><li>2023</li></ul>
+            <h3>家電除濕情境-恐怖片</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>2025</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 7 -->
+        <figure class="work" data-full="images/D/007.png" data-ratio="1">
+          <img src="images/D/007_.jpg" alt="家電空氣清淨-過敏原">
+          <figcaption>
+            <h3>家電空氣清淨-過敏原</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>2025</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 8 -->
+        <figure class="work" data-full="images/D/008.png" data-ratio="1">
+          <img src="images/D/008_.jpg" alt="家電社群互動-端午節">
+          <figcaption>
+            <h3>家電社群互動-端午節</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>2025</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 9 -->
+        <figure class="work" data-full="images/D/009.png" data-ratio="1">
+          <img src="images/D/009_.jpg" alt="家電社群互動-塔羅牌">
+          <figcaption>
+            <h3>家電社群互動-塔羅牌</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>2025</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 10 -->
+        <figure class="work" data-full="images/D/010.png" data-ratio="1">
+          <img src="images/D/010_.jpg" alt="家電空氣清淨-冷知識">
+          <figcaption>
+            <h3>家電空氣清淨-冷知識</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>2025</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 11 -->
+        <figure class="work" data-full="images/D/011.png" data-ratio="1">
+          <img src="images/D/011_.jpg" alt="家電設計師聯名活動">
+          <figcaption>
+            <h3>家電設計師聯名活動</h3>
+            <p></p>
+            <ul class="tags"><li>Production</li><li>2025</li></ul>
           </figcaption>
         </figure>
       </div>
     </div>
     <div class="dots"></div>
-    <p class="hint">點擊看說明</p>
+    <p class="hint">點擊展開完整系列圖</p>
+  </section>
+  
+
+
+  <!-- ============ 區塊 05：動態製作 ============ -->
+  <section class="block" id="motion">
+    <header class="block-head"><b>05</b><h2>動態製作</h2><span>Motion</span></header>
+    <p class="block-desc">動畫製作與文字資訊動態設計。</p>
+    <div class="carousel">
+      <button class="arr prev" type="button" aria-label="上一張">‹</button>
+      <button class="arr next" type="button" aria-label="下一張">›</button>
+      <div class="track">
+        <!-- 作品 1 -->
+        <figure class="work" data-ig="https://www.instagram.com/reel/DZc3E4pIv65/?utm_source=ig_web_copy_link&mdxt=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA==" data-ratio="0.62">
+          <img src="images/E/001.jpg">
+          <figcaption>
+            <h3></h3>
+            <p></p>
+            <ul class="tags"><li>Blender</li><li>3D動畫</li><li>2026</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 2 -->
+        <figure class="work" data-ig="https://www.instagram.com/p/DQHKP9ND7w_/" data-ratio="0.62">
+          <img src="images/E/002.jpg">
+          <figcaption>
+            <h3></h3>
+            <p></p>
+            <ul class="tags"><li>After Effects</li><li>動態設計</li><li>2025</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 3 -->
+        <figure class="work" data-ig="https://www.instagram.com/reel/CxyCQD4p9IQ/?utm_source=ig_web_copy_link&vrfl=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA==" data-ratio="0.62">
+          <img src="images/E/003.jpg">
+          <figcaption>
+            <h3></h3>
+            <p></p>
+            <ul class="tags"><li>Procreate</li><li>手繪逐格</li><li>2023</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 4 -->
+        <figure class="work" data-yt="https://youtu.be/C513ldUhSbs?si=Icndbf5r87A4oZtH" data-ratio="1">
+          <img src="" alt="賣場活動宣傳">
+          <figcaption>
+            <h3>賣場活動宣傳</h3>
+            <p></p>
+            <ul class="tags"><li>After Effects</li><li>動態設計</li><li>2023</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 5 -->
+        <figure class="work" data-yt="https://youtu.be/s4LXblBV3Nw?si=NT5pZ4o1W4KEpN6q" data-ratio="1">
+          <img src="" alt="賣場活動宣傳">
+          <figcaption>
+            <h3>賣場活動宣傳</h3>
+            <p></p>
+            <ul class="tags"><li>After Effects</li><li>動態設計</li><li>2023</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 6 -->
+        <figure class="work" data-yt="https://youtu.be/sAVBAUY5wZY?si=fHwmeyttGB91Xt4Y" data-ratio="1">
+          <img src="" alt="賣場活動宣傳">
+          <figcaption>
+            <h3>賣場活動宣傳</h3>
+            <p></p>
+            <ul class="tags"><li>After Effects</li><li>動態設計</li><li>2023</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 7 -->
+        <figure class="work" data-yt="https://youtu.be/EOX0IxNS1tI?si=OL8L8r1A2wjveGgi" data-ratio="">
+          <img src="" alt="遊戲宣傳">
+          <figcaption>
+            <h3>遊戲宣傳</h3>
+            <p></p>
+            <ul class="tags"><li>After Effects</li><li>動態設計</li><li>2019</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 8 -->
+        <figure class="work" data-yt="https://youtu.be/TqVOF3_1uTc?si=uqkF2TTpEsSx0dtO" data-ratio="">
+          <img src="" alt="遊戲宣傳">
+          <figcaption>
+            <h3>遊戲宣傳</h3>
+            <p></p>
+            <ul class="tags"><li>After Effects</li><li>動態設計</li><li>2019</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 9 -->
+        <figure class="work" data-yt="https://youtu.be/EOX0IxNS1tI?si=OL8L8r1A2wjveGgi" data-ratio="">
+          <img src="" alt="遊戲宣傳">
+          <figcaption>
+            <h3>遊戲宣傳</h3>
+            <p></p>
+            <ul class="tags"><li>After Effects</li><li>動態設計</li><li>2019</li></ul>
+          </figcaption>
+        </figure>
+
+        <!-- 作品 10 -->
+        <figure class="work" data-yt="https://youtu.be/YALT6t-BxVI?si=ZH_4-8kh9QLOExJz" data-ratio="">
+          <img src="" alt="遊戲宣傳">
+          <figcaption>
+            <h3>遊戲宣傳</h3>
+            <p></p>
+            <ul class="tags"><li>After Effects</li><li>動態設計</li><li>2019</li></ul>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+    <div class="dots"></div>
+    <p class="hint">點擊播放影片</p>
   </section>
 
-  <!-- ============ 區塊 05：字體設計 ============ -->
-  <section class="block" id="type">
-    <header class="block-head"><b>05</b><h2>字體設計</h2><span>Typography</span></header>
+
+  
+  <!-- ============ 區塊 06：活動單頁 ============ -->
+  <section class="block" id="landingpage">
+    <header class="block-head"><b>06</b><h2>活動單頁</h2><span>Landing Page</span></header>
     <p class="block-desc">從字型實驗到標準字，探索文字本身的造型與個性。</p>
     <div class="carousel">
       <button class="arr prev" type="button" aria-label="上一張">‹</button>
       <button class="arr next" type="button" aria-label="下一張">›</button>
       <div class="track">
         <!-- 作品 1 -->
-        <figure class="work" data-hue="205" data-ratio="0.75">
-          <img src="" alt="「潮」 字體實驗">
+        <figure class="work" data-full="images/F/001.jpg" data-ratio="0.6">
+          <img src="images/F/001-1.jpg" alt="電信回饋點數介紹">
           <figcaption>
-            <h3>「潮」 字體實驗</h3>
-            <p>以水波筆劃重構漢字，保留可讀性。</p>
-            <ul class="tags"><li>自創字型</li></ul>
+            <h3>電信回饋點數介紹</h3>
+            <p></p>
+            <ul class="tags"><li>2023</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 2 -->
-        <figure class="work" data-hue="45" data-ratio="1.45">
-          <img src="" alt="「光」 標準字">
+        <figure class="work" data-full="images/F/002.jpg" data-ratio="0.6">
+          <img src="images/F/002-1.jpg" alt="電信網路門市雙十一活動">
           <figcaption>
-            <h3>「光」 標準字</h3>
-            <p>幾何切割筆劃，呈現光線折射。</p>
-            <ul class="tags"><li>標準字</li><li>2025</li></ul>
+            <h3>電信網路門市雙十一活動</h3>
+            <p></p>
+            <ul class="tags"><li>2023</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 3 -->
-        <figure class="work" data-hue="300" data-ratio="1.3">
-          <img src="" alt="Aa Grotesk 拉丁字體">
+        <figure class="work" data-full="images/F/003.jpg" data-ratio="0.6">
+          <img src="images/F/003-1.jpg" alt="行動支付點數回饋活動">
           <figcaption>
-            <h3>Aa Grotesk 拉丁字體</h3>
-            <p>中性無襯線字族，共三個字重。</p>
-            <ul class="tags"><li>Latin</li><li>3 weights</li></ul>
+            <h3>行動支付點數回饋活動</h3>
+            <p></p>
+            <ul class="tags"><li>2023</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 4 -->
-        <figure class="work" data-hue="160" data-ratio="0.85">
-          <img src="" alt="「靜」 書法再詮釋">
+        <figure class="work" data-full="images/F/004.jpg" data-ratio="0.6">
+          <img src="images/F/004-1.jpg" alt="行動支付點數回饋活動">
           <figcaption>
-            <h3>「靜」 書法再詮釋</h3>
-            <p>傳統筆意結合現代幾何骨架。</p>
-            <ul class="tags"><li>書法</li><li>數位</li></ul>
+            <h3>行動支付點數回饋活動</h3>
+            <p></p>
+            <ul class="tags"><li>2023</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 5 -->
-        <figure class="work" data-hue="110" data-ratio="1.6">
-          <img src="" alt="「山」 圖像字">
+        <figure class="work" data-full="images/F/005.jpg" data-ratio="0.6">
+          <img src="images/F/005-1.jpg" alt="行動支付點數回饋活動">
           <figcaption>
-            <h3>「山」 圖像字</h3>
-            <p>把山形融入筆劃，字即是景。</p>
-            <ul class="tags"><li>圖像字</li><li>2024</li></ul>
+            <h3>行動支付點數回饋活動</h3>
+            <p></p>
+            <ul class="tags"><li>2023</li></ul>
           </figcaption>
         </figure>
 
         <!-- 作品 6 -->
-        <figure class="work" data-hue="335" data-ratio="1.05">
-          <img src="" alt="Serif Tide 襯線體">
+        <figure class="work" data-full="images/F/006.jpg" data-ratio="0.6">
+          <img src="images/F/006-1.jpg" alt="電信MOD方案介紹">
           <figcaption>
-            <h3>Serif Tide 襯線體</h3>
-            <p>襯線帶有手刻的不規則感，適合長文。</p>
-            <ul class="tags"><li>Latin</li><li>2023</li></ul>
+            <h3>電信MOD方案介紹</h3>
+            <p></p>
+            <ul class="tags"><li>2022</li></ul>
           </figcaption>
         </figure>
       </div>
     </div>
     <div class="dots"></div>
-    <p class="hint">點擊看說明</p>
-  </section>
-  <!-- ============ 區塊 06：字體設計 ============ -->
-  <section class="block" id="type">
-    <header class="block-head"><b>06</b><h2>字體設計</h2><span>Typography</span></header>
-    <p class="block-desc">從字型實驗到標準字，探索文字本身的造型與個性。</p>
-    <div class="carousel">
-      <button class="arr prev" type="button" aria-label="上一張">‹</button>
-      <button class="arr next" type="button" aria-label="下一張">›</button>
-      <div class="track">
-        <!-- 作品 1 -->
-        <figure class="work" data-hue="205" data-ratio="0.75">
-          <img src="" alt="「潮」 字體實驗">
-          <figcaption>
-            <h3>「潮」 字體實驗</h3>
-            <p>以水波筆劃重構漢字，保留可讀性。</p>
-            <ul class="tags"><li>自創字型</li></ul>
-          </figcaption>
-        </figure>
-
-        <!-- 作品 2 -->
-        <figure class="work" data-hue="45" data-ratio="1.45">
-          <img src="" alt="「光」 標準字">
-          <figcaption>
-            <h3>「光」 標準字</h3>
-            <p>幾何切割筆劃，呈現光線折射。</p>
-            <ul class="tags"><li>標準字</li><li>2025</li></ul>
-          </figcaption>
-        </figure>
-
-        <!-- 作品 3 -->
-        <figure class="work" data-hue="300" data-ratio="1.3">
-          <img src="" alt="Aa Grotesk 拉丁字體">
-          <figcaption>
-            <h3>Aa Grotesk 拉丁字體</h3>
-            <p>中性無襯線字族，共三個字重。</p>
-            <ul class="tags"><li>Latin</li><li>3 weights</li></ul>
-          </figcaption>
-        </figure>
-
-        <!-- 作品 4 -->
-        <figure class="work" data-hue="160" data-ratio="0.85">
-          <img src="" alt="「靜」 書法再詮釋">
-          <figcaption>
-            <h3>「靜」 書法再詮釋</h3>
-            <p>傳統筆意結合現代幾何骨架。</p>
-            <ul class="tags"><li>書法</li><li>數位</li></ul>
-          </figcaption>
-        </figure>
-
-        <!-- 作品 5 -->
-        <figure class="work" data-hue="110" data-ratio="1.6">
-          <img src="" alt="「山」 圖像字">
-          <figcaption>
-            <h3>「山」 圖像字</h3>
-            <p>把山形融入筆劃，字即是景。</p>
-            <ul class="tags"><li>圖像字</li><li>2024</li></ul>
-          </figcaption>
-        </figure>
-
-        <!-- 作品 6 -->
-        <figure class="work" data-hue="335" data-ratio="1.05">
-          <img src="" alt="Serif Tide 襯線體">
-          <figcaption>
-            <h3>Serif Tide 襯線體</h3>
-            <p>襯線帶有手刻的不規則感，適合長文。</p>
-            <ul class="tags"><li>Latin</li><li>2023</li></ul>
-          </figcaption>
-        </figure>
-      </div>
-    </div>
-    <div class="dots"></div>
-    <p class="hint">點擊看說明</p>
+    <p class="hint">點擊展開全頁</p>
   </section>
 </main>
 
 <!-- ================= 頁尾 ================= -->
-<footer class="foot">© 2026 你的名字 · hello@example.com</footer>
+<footer class="foot">© 2026 bonaiarts@gmail.com</footer>
 
 <!-- ================= 燈箱（點圖放大用，不用修改） ================= -->
 <div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="作品檢視">
@@ -606,6 +791,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 <script>
 /* ============ A. 工具 ============ */
 const $=(r,s)=>r.querySelector(s),$$=(r,s)=>[...r.querySelectorAll(s)];
+const igEmbed=u=>{const x=(u||"").match(/instagram\.com\/(?:[\w.]+\/)?(reel|reels|p|tv)\/([\w-]+)/);return x?`https://www.instagram.com/${x[1]=="reels"?"reel":x[1]}/${x[2]}/embed`:""};
 const ytId=m=>{const x=(m||"").match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/);return x?x[1]:/^[\w-]{11}$/.test(m||"")?m:""};
 
 /* ============ B. 範例圖形（沒放圖片時顯示） ============ */
@@ -635,9 +821,13 @@ $$(document,".block").forEach(s=>spy.observe(s));
 const lb=document.getElementById("lightbox"),stage=$(lb,".lb-stage"),cap=$(lb,".lb-cap");
 let L={list:[],k:0,done:null};
 function lbShow(){
-  const w=L.list[L.k],m=$(w,":scope>img,:scope>svg"),c=m.cloneNode(true),f=$(w,"figcaption");
-  if(c.tagName=="IMG")c.removeAttribute("loading");else{c.setAttribute("width",800);c.setAttribute("height",500)}
-  stage.classList.remove("full");stage.replaceChildren(c);stage.scrollTo(0,0);
+  const w=L.list[L.k],m=$(w,":scope>img,:scope>svg"),f=$(w,"figcaption");
+  const c=w.dataset.full?Object.assign(new Image(),{src:w.dataset.full,alt:m.alt||""}):m.cloneNode(true); // data-full：點開載入完整圖檔
+  if(c.tagName=="IMG"){c.removeAttribute("loading");c.draggable=false;
+    const tall=()=>stage.classList.toggle("tall",c.naturalHeight/c.naturalWidth>1.5); // 長圖：以寬度貼齊、可上下捲動
+    c.complete&&c.naturalWidth?tall():c.addEventListener("load",tall)}
+  else{c.setAttribute("width",800);c.setAttribute("height",500)}
+  stage.classList.remove("full","tall");stage.replaceChildren(c);stage.scrollTo(0,0);
   cap.innerHTML=f?f.innerHTML:"";lb.classList.toggle("single",L.list.length<2);
 }
 function lbOpen(list,w,done){L={list,k:list.indexOf(w),done};lbShow();lb.classList.add("open");document.body.style.overflow="hidden"}
@@ -668,11 +858,13 @@ function carousel(sec){
 
   // 影片：按播放鈕才載入 iframe
   const stop=()=>{if(playing){playing.s.innerHTML=playing.html;playing.s.classList.remove("vid","show");playing=null;paused=false}};
-  const play=b=>{const s=b.closest(".work");stop();hold();playing={s,html:s.innerHTML};
-    s.innerHTML=`<iframe src="https://www.youtube.com/embed/${s.dataset.yt}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`+$(s,"figcaption").outerHTML;
+  const play=b=>{const s=b.closest(".work");
+    if(location.protocol=="file:"&&s.dataset.watch){window.open(s.dataset.watch,"_blank","noopener");return} // 本機檔案無法內嵌 YouTube，改開新分頁
+    stop();hold();playing={s,html:s.innerHTML};
+    s.innerHTML=`<iframe src="${s.dataset.embed}" scrolling="no" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`+$(s,"figcaption").outerHTML;
     s.classList.add("vid")};
   const jump=k=>{stop();go(k);if(!paused)start()};
-  const zoom=w=>lbOpen(sls.filter(s=>!s.dataset.yt),w,free);
+  const zoom=w=>lbOpen(sls.filter(s=>!s.dataset.video),w,free);
 
   // 箭頭
   $(sec,".prev").onclick=e=>{e.stopPropagation();jump(i-1)};
@@ -681,7 +873,7 @@ function carousel(sec){
   sls.forEach(s=>{s.addEventListener("mouseenter",()=>{hold();s.classList.add("show")});s.addEventListener("mouseleave",free)});
   car.addEventListener("click",e=>{
     const b=e.target.closest(".play"),w=e.target.closest(".work");
-    if(b)play(b);else if(w&&!w.dataset.yt)zoom(w);
+    if(b)play(b);else if(w&&!w.dataset.video)zoom(w);
   });
   // 觸控：左右滑動換頁；點一下暫停並顯示文字，再點一下放大
   let x0=0;
@@ -691,7 +883,7 @@ function carousel(sec){
     if(Math.abs(dx)>40){sls.forEach(x=>x.classList.remove("show"));jump(i+(dx<0?1:-1));return}
     if(pb){e.preventDefault();play(pb);return}
     if(!w)return;e.preventDefault();
-    if(w.classList.contains("show")){w.dataset.yt?free():zoom(w)}
+    if(w.classList.contains("show")){w.dataset.video?free():zoom(w)}
     else{hold();sls.forEach(x=>x.classList.remove("show"));w.classList.add("show")}
   });
   addEventListener("resize",calc);
@@ -699,15 +891,27 @@ function carousel(sec){
   calc();start();
 }
 
+/* 影片外框：有放 <img src> 就當封面（外框採封面本身比例），否則用預設縮圖與 data-ratio */
+function vid(w,img,embed,watch,ratio,thumb,btn){
+  w.dataset.embed=embed;w.dataset.video=1;if(watch)w.dataset.watch=watch;w.style.aspectRatio=ratio;
+  if(img&&img.getAttribute("src")){img.classList.add("th");
+    const fit=()=>{if(img.naturalWidth)w.style.aspectRatio=img.naturalWidth+"/"+img.naturalHeight};
+    img.complete?fit():img.addEventListener("load",fit)}
+  else{if(img)img.remove();w.insertAdjacentHTML("afterbegin",thumb)}
+  w.insertAdjacentHTML("afterbegin",btn);
+}
+
 /* ============ F. 初始化：補上範例圖形 / 影片縮圖，再啟動輪播 ============ */
 $$(document,".block").forEach((sec,si)=>{
   $$(sec,".work").forEach((w,i)=>{
-    const img=$(w,":scope>img"),y=ytId(w.dataset.yt);
-    if(y){ // 影片
-      if(img)img.remove();w.dataset.yt=y;w.style.aspectRatio="16/9";
-      w.insertAdjacentHTML("afterbegin",`<img class="th" src="https://i.ytimg.com/vi/${y}/hqdefault.jpg" alt=""><button class="play" type="button" aria-label="播放影片">▶</button>`);
+    const img=$(w,":scope>img"),y=ytId(w.dataset.yt),ig=igEmbed(w.dataset.ig),btn=`<button class="play" type="button" aria-label="播放影片">▶</button>`;
+    if(y){ // YouTube 影片：外框比例用 data-ratio（預設 16:9；正方形填 1，Shorts 約 0.5625）
+      vid(w,img,`https://www.youtube.com/embed/${y}?autoplay=1&rel=0`,`https://www.youtube.com/watch?v=${y}`,w.dataset.ratio||"16/9",`<img class="th" src="https://i.ytimg.com/vi/${y}/hqdefault.jpg" alt="">`,btn);
+    }else if(ig){ // Instagram 影片 / Reels
+      vid(w,img,ig,"",w.dataset.ratio||0.62,art(si,i,+w.dataset.hue||200),btn);
     }else if(img&&img.getAttribute("src")){ // 真實圖片：維持原比例
       img.draggable=false;
+      if(w.dataset.full){w.style.aspectRatio=w.dataset.ratio||1;img.classList.add("crop")} // 預覽圖：固定外框比例，點開看完整圖檔
     }else{ // 範例圖形
       if(img)img.remove();w.style.aspectRatio=w.dataset.ratio||1.3;
       w.insertAdjacentHTML("afterbegin",art(si,i,+w.dataset.hue||200));
